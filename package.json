@@ -1,0 +1,26 @@
+{
+  "name": "simple-chat-server",
+  "version": "1.0.0",
+  "description": "Simple NodeJs chat server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netor27/simple-chat-server.git"
+  },
+  "keywords": [
+    "chat",
+    "nodejs"
+  ],
+  "author": "Ernesto Rubio Fuentes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/netor27/simple-chat-server/issues"
+  },
+  "homepage": "https://github.com/netor27/simple-chat-server#readme",
+  "dependencies": {
+    "moment": "^2.19.1"
+  }
+}
