@@ -22,5 +22,9 @@
   "homepage": "https://github.com/netor27/simple-chat-server#readme",
   "dependencies": {
     "moment": "^2.19.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "mocha": "^4.0.1"
   }
 }
