@@ -1,2 +1,2 @@
-# simple-chat-server
+# node-simple-chat
 Simple NodeJs tcp chat
