@@ -1,4 +1,4 @@
-var ChatSocket = require("../models/chat_socket");
+var ServerSocket = require("../models/server_socket");
 var assert = require("assert");
 
 describe("Chat Server", function () {

@@ -1,8 +1,8 @@
 const server = require("net").createServer();
-var ChatSocket = require("./models/chat_socket");
+var ServerSocket = require("./models/server_socket");
 
 server.on("connection", socket => {
-    new ChatSocket(socket);    
+    ServerSocket(socket);    
 });
 
 server.listen(8000, () => console.log('Server listening on port 8000...'));

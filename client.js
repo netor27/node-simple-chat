@@ -7,8 +7,8 @@ client.connect(8000, "localhost", function() {
 });
 
 client.on('data', function(data) {
-	console.log('Received: ' + data);
-	client.destroy(); // kill client after server's response
+	console.log(data.toString().trim());
+	//client.destroy(); // kill client after server's response
 });
 
 client.on('close', function() {
@@ -16,5 +16,5 @@ client.on('close', function() {
 });
 
 client.on("error", function(err){
-    console.log(err);
+	console.log("Connection closed with error");	
 });
