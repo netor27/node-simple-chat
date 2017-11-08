@@ -1,21 +1,17 @@
 
-var moment = require("moment");
+var timeHelper = require("./helpers/time_helper")();
 const endOfLine = "\r\n";
-
-var getCurrentTimeStamp = function () {
-    return moment().format("DD/MM/YYYY hh:mm:ss") + " -- ";
-};
 
 var chatSocket = function (serverSocket) {
     if (!serverSocket) {
         throw "Server socket should be initialized";
     }
 
-    console.log(getCurrentTimeStamp() + "Client Connected");
-    serverSocket.write(getCurrentTimeStamp() + "Welcome!");
+    console.log(timeHelper.getCurrentTimeStamp() + "Client Connected");
+    serverSocket.write(timeHelper.getCurrentTimeStamp() + "Welcome!");
 
     var buffer = [];
-    serverSocket.on('data', data => {
+    serverSocket.on('data', data => { 
         // buffer the data 
         buffer.push(data);
         console.log(data.toString().trim());
@@ -23,8 +19,8 @@ var chatSocket = function (serverSocket) {
         if (data.indexOf(endOfLine) !== -1) {
             // If we receive an end of line, write it to console and to the client
             var bufferString = buffer.join("");
-            console.log(getCurrentTimeStamp() + bufferString);
-            serverSocket.write(getCurrentTimeStamp() + bufferString);
+            console.log(timeHelper.getCurrentTimeStamp() + bufferString);
+            serverSocket.write(timeHelper.getCurrentTimeStamp() + bufferString);
             emit("")
             //  empty the buffer and
             buffer = [];
@@ -33,7 +29,7 @@ var chatSocket = function (serverSocket) {
 
     serverSocket.on('end', () => {
         // log that a client disconnected
-        console.log(getCurrentTimeStamp() + "Client disconnected");
+        console.log(timeHelper.getCurrentTimeStamp() + "Client disconnected");
     });
 };
 
