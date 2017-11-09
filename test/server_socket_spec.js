@@ -11,23 +11,38 @@ describe("The Chat Server", function () {
         var consoleStub = new ConsoleStub();
         var spyWrite = sinon.spy(socket, "write");
         var spyConsole = sinon.spy(consoleStub, "log");
+        var serverSocket = null;
 
-        before(function () { 
-            ServerSocket(socket, consoleStub);    
+        before(function () {
+            serverSocket = ServerSocket(socket, consoleStub);
         });
-        it("should send a welcome message", function(){
+        it("should send a welcome message at connection", function () {
             spyWrite.calledOnce.should.be.true();
             spyWrite.args[0][0].should.endWith("Welcome!");
         });
 
-        it("should log a connection message", function(){
+        it("should log a connection message at connection", function () {
             spyConsole.calledOnce.should.be.true();
             spyConsole.args[0][0].should.endWith("Client Connected!");
         });
     });
 
-     describe("When a client disconnects", function () {
-         it("should log a disconnection message");
-     });
+    describe("When a client disconnects", function () {
+        var socket = new ServerSocketStub();
+        var consoleStub = new ConsoleStub();
+        var spyConsole = sinon.spy(consoleStub, "log");
+        var serverSocket = null;
+
+        before(function () {
+            serverSocket = ServerSocket(socket, consoleStub);
+        });
+
+        it("should log a disconnection message at disconnection", function () {
+            serverSocket.processEndConnection();
+            spyConsole.calledTwice.should.be.true();
+            spyConsole.args[1][0].should.endWith("Client disconnected");
+
+        });
+    });
 
 });
