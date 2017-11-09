@@ -1,10 +1,11 @@
-var logger = require("./helpers/logger")();
 var timeHelper = require("./helpers/time_helper")();
+var assert = require("assert");
 
-var serverSocket = function (socket) {
-    if (!socket) {
-        throw "Server socket should be initialized!";
-    }
+var serverSocket = function (socket, output) {
+    assert(socket, "Server socket should be initialized!");
+    assert(output, "Output should be initialized!");
+
+    var logger = require("./helpers/logger")(output);
 
     this.processData = function (data) {
         var message = data.toString().trim();

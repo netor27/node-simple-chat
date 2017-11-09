@@ -1,8 +1,8 @@
 var timeHelper = require("./time_helper")();
-var Logger = function(){
+var Logger = function(output){
 
     this.logMessage = function(message){
-        console.log(timeHelper.getCurrentTimeStamp() + message);
+        output.log(timeHelper.getCurrentTimeStamp() + message);
     };
 
     return {
