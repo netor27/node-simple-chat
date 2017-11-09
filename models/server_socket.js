@@ -30,9 +30,9 @@ var serverSocket = function (socket, output) {
     };
 
     // wire the events
-    socket.on('data', this.processData);
-    socket.on('end', this.processEndConnection);
-    socket.on('error', this.processError);
+    socket.on('data', function (data) { processData(data); });
+    socket.on('end', function () { processEndConnection(); });
+    socket.on('error', function (err) { processError(err); });
 
     // Log a new client and send a welcome message
     logger.logMessage("Client Connected!");

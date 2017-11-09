@@ -9,8 +9,10 @@ var ClientSocket = function (socket, stdin) {
         console.log(data.toString().trim());
     };
 
-    stdin.addListener("data", this.writeData);
+    // wire the events
+    stdin.on("data", this.writeData);
     socket.on('data', this.processInboundData);
+    
     return this;
 };
 

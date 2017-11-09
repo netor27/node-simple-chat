@@ -7,14 +7,14 @@ var should = require("should");
 
 describe("The Chat Server", function () {
     describe("When a client connects", function () {
-        var socket = new ServerSocketStub();
+        var socketStub = new ServerSocketStub();
         var consoleStub = new ConsoleStub();
-        var spyWrite = sinon.spy(socket, "write");
+        var spyWrite = sinon.spy(socketStub, "write");
         var spyConsole = sinon.spy(consoleStub, "log");
         var serverSocket = null;
 
         before(function () {
-            serverSocket = ServerSocket(socket, consoleStub);
+            serverSocket = ServerSocket(socketStub, consoleStub);
         });
         it("should send a welcome message at connection", function () {
             spyWrite.calledOnce.should.be.true();
@@ -28,13 +28,13 @@ describe("The Chat Server", function () {
     });
 
     describe("When a client disconnects", function () {
-        var socket = new ServerSocketStub();
+        var socketStub = new ServerSocketStub();
         var consoleStub = new ConsoleStub();
         var spyConsole = sinon.spy(consoleStub, "log");
         var serverSocket = null;
 
         before(function () {
-            serverSocket = ServerSocket(socket, consoleStub);
+            serverSocket = ServerSocket(socketStub, consoleStub);
         });
 
         it("should log a disconnection message at disconnection", function () {
@@ -45,4 +45,34 @@ describe("The Chat Server", function () {
         });
     });
 
+    describe("When an socket event ocurres", function () {
+        var dataParam = "TestMessage";
+        var errorParam = "TestErrorMessage";
+        var socketStub = new ServerSocketStub();
+        var consoleStub = new ConsoleStub();
+        var spyConsole = sinon.spy(consoleStub, "log");
+        var serverSocket = null;
+
+        before(function () {
+            serverSocket = ServerSocket(socketStub, consoleStub);
+        });
+
+        it("should process the data event", function () {
+            var spyProcessData = sinon.spy(serverSocket, "processData");
+            socketStub.emit("data", dataParam);
+            spyProcessData.calledOnce.should.be.true();
+            spyProcessData.args[0,0][0].should.be.equal(dataParam);
+        });
+        it("should process the end event", function(){
+            var spyprocessEnd = sinon.spy(serverSocket, "processEndConnection");
+            socketStub.emit("end");
+            spyprocessEnd.calledOnce.should.be.true();
+        });
+        it("should process the error event", function(){
+            spyProcessError = sinon.spy(serverSocket, "processError");
+            socketStub.emit("error", errorParam);
+            spyProcessError.calledOnce.should.be.true();
+            spyProcessError.args[0,0][0].should.be.equal(errorParam);
+        });
+    });
 });

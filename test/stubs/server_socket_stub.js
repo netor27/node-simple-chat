@@ -1,10 +1,12 @@
+var util = require("util");
+var EventEmitter = require("events").EventEmitter;
 
 var serverSocketStub = function(){
-    this.on = function(eventName, callback){
-    };
-
     this.write = function(message){        
     };
 }
+
+util.inherits(serverSocketStub, EventEmitter);
+
 
 module.exports = serverSocketStub;
