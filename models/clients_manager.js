@@ -1,6 +1,7 @@
 var assert = require("assert");
 var util = require("util");
 var EventEmitter = require("events").EventEmitter;
+var _ = require("underscore")._;
 
 var clientManager = function () {
     var clients = [];
@@ -10,8 +11,13 @@ var clientManager = function () {
         clients.push(client);
     };
 
-    this.getClientNames = function(){
-        return clients.map(function(e){ return e.getClientName(); });
+    this.removeClient = function (client) {
+        var index = _.indexOf(clients, client);
+        clients.splice(index, 1);
+    }
+
+    this.getClientNames = function () {
+        return clients.map(function (e) { return e.getClientName(); });
     };
 
     return this;

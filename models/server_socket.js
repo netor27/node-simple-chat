@@ -1,5 +1,6 @@
 var timeHelper = require("./helpers/time_helper")();
 var assert = require("assert");
+const uuidv1 = require('uuid/v1');
 
 var serverSocket = function (socket, output, manager) {
     assert(socket, "Server socket should be initialized!");
@@ -8,6 +9,7 @@ var serverSocket = function (socket, output, manager) {
 
     var self = this;
     var clientName = null;
+    var clientId = uuidv1();
 
     manager.addClient(self);
 
@@ -15,29 +17,45 @@ var serverSocket = function (socket, output, manager) {
         var message = data.toString().trim();
 
         if (message == "/list") {
-            self.writeMessageToSocket(manager.getClientNames().join(","));
+            self.writeMessageToSocket({
+                message: manager.getClientNames().join(","),
+                clientName: ""
+            });
         } else if (!clientName) {
             // set the client name with the first message.
-            self.writeMessageToSocket("Hello " + message);
+            self.writeMessageToSocket({
+                message: "Hello " + message,
+                clientName: ""
+            });
             clientName = message;
         } else {
-            // log the message and send it back            
-            self.writeMessageToSocket(message);
+            // broadcast the message to the other clients
+            manager.emit("broadcast", {
+                message: message,
+                clientId: clientId,
+                clientName: clientName
+            });
         }
     };
 
     this.processEndConnection = function () {
         // log that a client disconnected
         output.log(timeHelper.getCurrentTimeStamp() + " Client disconnected");
+        manager.removeClient(self);
     };
 
     this.processError = function (err) {
         // log that a client disconnected with an error
         output.log(timeHelper.getCurrentTimeStamp() + " Client disconnected with error " + err);
+        manager.removeClient(self);
     };
 
-    this.writeMessageToSocket = function (message) {
-        socket.write(timeHelper.getCurrentTimeStamp() + " " + self.getClientName() + ": " + message);
+    this.writeMessageToSocket = function (messageObject) {
+        if (messageObject.clientId != clientId) {
+            socket.write(timeHelper.getCurrentTimeStamp() + " " + messageObject.clientName + ": " + messageObject.message);
+        }
+
+
     };
 
     this.getClientName = function () {
@@ -49,11 +67,15 @@ var serverSocket = function (socket, output, manager) {
     socket.on('end', function () { self.processEndConnection(); });
     socket.on('error', function (err) { self.processError(err); });
 
-    //manager.on()
+    manager.on("broadcast", function (messageObject) { self.writeMessageToSocket(messageObject); });
 
     // Log a new client and send a welcome message
     output.log(timeHelper.getCurrentTimeStamp() + " Client Connected!");
-    self.writeMessageToSocket("Welcome!, please send your name..");
+    self.writeMessageToSocket(
+        {
+            message: "Welcome!, please send your name..",
+            clientName: ""
+        });
 
     return this;
 };

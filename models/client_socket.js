@@ -8,7 +8,14 @@ var clientSocket = function (socket, stdin, output) {
     var self = this;
 
     this.writeData = function (data) {
-        socket.write(data.toString().trim());
+        var message = data.toString().trim();
+        if (message == "/quit") {
+            socket.destroy();
+            output.log("Successfully disconnected from server.");
+            process.exit();
+         } else {
+            socket.write(message);
+        }
     };
 
     this.processInboundData = function (data) {
